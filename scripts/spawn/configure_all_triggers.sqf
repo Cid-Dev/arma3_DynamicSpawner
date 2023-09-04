@@ -42,6 +42,9 @@ private _configGroups = configFile >> "CfgGroups";
 private _eastGroups = _configGroups >>  "East";
 private _eastGroupOPF_F = _eastGroups >> "OPF_F";
 private _eastGroupOPF_FInfantry = _eastGroupOPF_F >> "Infantry";
+private _eastGroupOPF_FMechanized = _eastGroupOPF_F >> "Mechanized";
+private _eastGroupOPF_FArmored = _eastGroupOPF_F >> "Armored";
+
 private _groups = createHashMapFromArray [
 	[
 		"EAST", createHashMapFromArray [
@@ -60,6 +63,21 @@ private _groups = createHashMapFromArray [
 					_eastGroupOPF_FInfantry >> "OIA_InfAssault",
 					_eastGroupOPF_FInfantry >> "OIA_ReconSquad",
 					_eastGroupOPF_FInfantry >> "O_InfTeam_AT_Heavy"
+				]
+			],
+			[
+				"VEHICLE", [
+					_eastGroupOPF_FMechanized >> "OIA_MechInfSquad",
+					_eastGroupOPF_FMechanized >> "OIA_MechInf_AT",
+					_eastGroupOPF_FMechanized >> "OIA_MechInf_AA",
+					_eastGroupOPF_FMechanized >> "OIA_MechInf_Support",
+					_eastGroupOPF_FArmored >> "OIA_TankPlatoon",
+					_eastGroupOPF_FArmored >> "OIA_TankPlatoon_AA",
+					_eastGroupOPF_FArmored >> "OIA_TankSection",
+					_eastGroupOPF_FArmored >> "OIA_SPGPlatoon_Scorcher",
+					_eastGroupOPF_FArmored >> "OIA_SPGSection_Scorcher",
+					_eastGroupOPF_FArmored >> "O_TankSection_Heavy",
+					_eastGroupOPF_FArmored >> "O_TankPlatoon_Heavy",
 				]
 			]
 		]
