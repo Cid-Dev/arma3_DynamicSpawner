@@ -1,6 +1,4 @@
-#define NUMBER_OF_PARTS 10
-#define INDEX_OF_ACTIVATION_SIDE 1
-#define INDEX_OF_SPAWN_SIDE 2
+#include "spawn_constants.hpp"
 
 params [
 	[ "_trigger", objNull, [ objNull ] ],
