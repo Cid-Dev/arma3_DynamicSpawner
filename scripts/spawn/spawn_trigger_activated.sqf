@@ -9,7 +9,10 @@
 #define INDEX_OF_AMOUNT_OF_AIR_WAYPOINTS 8
 #define INDEX_OF_TRIGGER_ID 9
 #define RANK_PRIVATE 0
+#define RANK_LIEUTENANT 3
 #define RANK_CAPTAIN 4
+#define RANK_MAJOR 5
+
 // DynamicSpawn_WEST_EAST_5_6,8_2_4_1_1_1
 params [
 	[ "_trigger", objNull, [ objNull ] ],
@@ -47,22 +50,21 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 
 	
 	private _string_array_to_int_array = _functions get "string_array_to_int_array";
+
 	private _AmountsOfInfantryWaypointsStr = (_triggerDatas select INDEX_OF_AMOUNT_OF_INFANTRY_WAYPOINTS) splitString ",";
-	diag_log format [ "inf wp : %1", str _AmountsOfInfantryWaypointsStr ];
 	private _AmountsOfInfantryWaypoints = [ _AmountsOfInfantryWaypointsStr ] call _string_array_to_int_array;
 	if (count _AmountsOfInfantryWaypoints == 1) then
 	{
 		_AmountsOfInfantryWaypoints pushBack (_AmountsOfInfantryWaypoints select 0);
 	};
 
-/*
-	private _AmountsOfVehicleWaypoints = ((_triggerDatas select INDEX_OF_AMOUNT_OF_VEHICLE_WAYPOINTS) splitString ",") call _string_array_to_int_array;
+	private _AmountsOfVehicleWaypointsStr = (_triggerDatas select INDEX_OF_AMOUNT_OF_INFANTRY_WAYPOINTS) splitString ",";
+	private _AmountsOfVehicleWaypoints = [ _AmountsOfVehicleWaypointsStr ] call _string_array_to_int_array;
 	if (count _AmountsOfVehicleWaypoints == 1) then
 	{
 		_AmountsOfVehicleWaypoints pushBack (_AmountsOfVehicleWaypoints select 0);
 	};
-	//private _AmountOfVehicleWaypoints = _AmountsOfVehicleWaypoints call BIS_fnc_randomInt;
-
+/*
 	private _AmountsOfAirWaypoints = ((_triggerDatas select INDEX_OF_AMOUNT_OF_AIR_WAYPOINTS) splitString ",") call _string_array_to_int_array;
 	if (count _AmountsOfAirWaypoints == 1) then
 	{
@@ -92,41 +94,91 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	//private _triggerDatas = _triggerText splitString "_";
 	diag_log format [ "Got %1 infantry squads waypoints, %2 vehicle squads waypoints and %3 air squads waypoints.", str count _infantrySpawnPoints, str count _vehicleSpawnPoints, str count _airSpawnPoints ];
 
-	diag_log "Spawning infantry squads.";
 	private _groups = _trigger getVariable "_groups";
-	private _infantryGroups = [ _groups get "INFANTRY", count _infantrySpawnPoints, false ] call _get_n_random_elements_from_array;
-	private _amountOfInfantryGroupsToSpawn = count _infantryGroups - 1;
-
 	private _spawnedGroups = _trigger getVariable "_groupsToDespawn";
 	private _loop_waypoints_to_a_group = _functions get "loop_waypoints_to_a_group";
 	private _loop_waypoints_to_a_group_file_path = _functions get "loop_waypoints_to_a_group_file_path";
 
-	for "_i" from 0 to _amountOfInfantryGroupsToSpawn do {
-		diag_log format [ "Spawning group %1.", str _i ];
-		private _groupToSpawn = [
-			getPosATL (_infantrySpawnPoints select _i),
-			_spawnSide,
-			_infantryGroups select _i,
-			[],
-			[],
-			[ RANK_PRIVATE, RANK_CAPTAIN ],
-			[],
-			[],
-			floor random 360
-		] call BIS_fnc_spawnGroup;
-		_groupToSpawn deleteGroupWhenEmpty true;
-		diag_log format [ "Group %1 is %2.", str _i, groupId _groupToSpawn ];
-		_spawnedGroups pushBack _groupToSpawn;
 
-		diag_log "Getting amount of different waypoints.";
-		private _AmountOfInfantryWaypoints = _AmountsOfInfantryWaypoints call BIS_fnc_randomInt;
-		diag_log format [ "%1 infantry waypoints are going to be used.", str _AmountOfInfantryWaypoints ];
-		private _waypoints = [ _allInfantryWaypoints, _AmountOfInfantryWaypoints ] call _get_n_random_elements_from_array;
-		_groupToSpawn setVariable [ "_waypoints", _waypoints ];
-		_groupToSpawn setVariable [ "_loop_waypoints_to_a_group_file_path", _loop_waypoints_to_a_group_file_path ];
-		diag_log "Setting up waypoints.";
-		[ _groupToSpawn, 0 ] call _loop_waypoints_to_a_group;
+	private _spawnLandUnits = {
+		params [
+			"_typeOfSquadForLogMessage",
+			"_hashMapKey",
+			"_groups",
+			"_landUnitsSpawnPoints",
+			"_get_n_random_elements_from_array",
+			"_spawnSide",
+			"_minRank",
+			"_maxRank",
+			"_spawnedGroups",
+			"_AmountsOfLandUnitsWaypoints",
+			"_allLandUnitsWaypoints",
+			"_loop_waypoints_to_a_group_file_path",
+			"_loop_waypoints_to_a_group"
+		];
+		diag_log format [ "Spawning %1 squads.", _typeOfSquadForLogMessage ];
+		private _landUnitsGroup = [ _groups get _hashMapKey, count _landUnitsSpawnPoints, false ] call _get_n_random_elements_from_array;
+		private _amountOfLandUnitsToSpawn = count _landUnitsGroup - 1;
+		for "_i" from 0 to _amountOfLandUnitsToSpawn do {
+			diag_log format [ "Spawning group %1.", str _i ];
+			private _groupToSpawn = [
+				getPosATL (_landUnitsSpawnPoints select _i),
+				_spawnSide,
+				_landUnitsGroup select _i,
+				[],
+				[],
+				[ _minRank, _maxRank ],
+				[],
+				[],
+				floor random 360
+			] call BIS_fnc_spawnGroup;
+			_groupToSpawn deleteGroupWhenEmpty true;
+			diag_log format [ "Group %1 is %2.", str _i, groupId _groupToSpawn ];
+			_spawnedGroups pushBack _groupToSpawn;
+
+			diag_log "Getting amount of different waypoints.";
+			private _AmountOfLandUnitsWaypoints = _AmountsOfLandUnitsWaypoints call BIS_fnc_randomInt;
+			diag_log format [ "%1 %2 waypoints are going to be used.", str _AmountOfLandUnitsWaypoints, _typeOfSquadForLogMessage ];
+			private _waypoints = [ _allLandUnitsWaypoints, _AmountOfLandUnitsWaypoints ] call _get_n_random_elements_from_array;
+			_groupToSpawn setVariable [ "_waypoints", _waypoints ];
+			_groupToSpawn setVariable [ "_loop_waypoints_to_a_group_file_path", _loop_waypoints_to_a_group_file_path ];
+			diag_log "Setting up waypoints.";
+			[ _groupToSpawn, 0 ] call _loop_waypoints_to_a_group;
+		};
 	};
+
+	[
+		"infantry",
+		"INFANTRY",
+		_groups,
+		_infantrySpawnPoints,
+		_get_n_random_elements_from_array,
+		_spawnSide,
+		RANK_PRIVATE,
+		RANK_CAPTAIN,
+		_spawnedGroups,
+		_AmountsOfInfantryWaypoints,
+		_allInfantryWaypoints,
+		_loop_waypoints_to_a_group_file_path,
+		_loop_waypoints_to_a_group
+	] call _spawnLandUnits;
+
+	[
+		"vehicle",
+		"VEHICLE",
+		_groups,
+		_vehicleSpawnPoints,
+		_get_n_random_elements_from_array,
+		_spawnSide,
+		RANK_LIEUTENANT,
+		RANK_MAJOR,
+		_spawnedGroups,
+		_AmountsOfVehicleWaypoints,
+		_allVehicleWaypoints,
+		_loop_waypoints_to_a_group_file_path,
+		_loop_waypoints_to_a_group
+	] call _spawnLandUnits;
+
 	_trigger setVariable [ "_groupsToDespawn", _spawnedGroups ];
 	private _spawnedGroups = _trigger getVariable "_groupsToDespawn";
 

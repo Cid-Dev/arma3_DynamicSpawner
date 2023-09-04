@@ -77,7 +77,7 @@ private _groups = createHashMapFromArray [
 					_eastGroupOPF_FArmored >> "OIA_SPGPlatoon_Scorcher",
 					_eastGroupOPF_FArmored >> "OIA_SPGSection_Scorcher",
 					_eastGroupOPF_FArmored >> "O_TankSection_Heavy",
-					_eastGroupOPF_FArmored >> "O_TankPlatoon_Heavy",
+					_eastGroupOPF_FArmored >> "O_TankPlatoon_Heavy"
 				]
 			]
 		]
