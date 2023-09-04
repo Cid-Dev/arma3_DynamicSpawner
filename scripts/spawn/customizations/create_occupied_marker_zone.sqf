@@ -1,9 +1,10 @@
-#define NUMBER_OF_PARTS 10
-#define INDEX_OF_TRIGGER_ID 9
+#include "..\spawn_constants.hpp"
+
 #define INDEX_OF_X 0
 #define INDEX_OF_Y 1
 #define INDEX_OF_ANGLE 2
 #define INDEX_OF_IS_RECTANGLE 3
+
 params [
 	[ "_trigger", objNull, [ objNull ] ],
 	"_createMarkerZone"

@@ -1,5 +1,4 @@
-#define NUMBER_OF_PARTS 10
-#define INDEX_OF_TRIGGER_ID 9
+#include "..\spawn_constants.hpp"
 
 params [
 	[ "_trigger", objNull, [ objNull ] ],

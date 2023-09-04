@@ -79,6 +79,26 @@ private _groups = createHashMapFromArray [
 					_eastGroupOPF_FArmored >> "O_TankSection_Heavy",
 					_eastGroupOPF_FArmored >> "O_TankPlatoon_Heavy"
 				]
+			],
+			[
+				"AIR", [
+					"O_Heli_Light_02_F",
+					"O_Heli_Light_02_v2_F",
+					"O_Heli_Attack_02_F",
+					"O_Heli_Attack_02_black_F",
+					"O_Plane_CAS_02_F",
+					"O_T_VTOL_02_infantry_F",
+					"O_T_VTOL_02_vehicle_F",
+					"O_T_VTOL_02_infantry_hex_F",
+					"O_T_VTOL_02_infantry_ghex_F",
+					"O_T_VTOL_02_infantry_grey_F",
+					"O_T_VTOL_02_vehicle_hex_F",
+					"O_T_VTOL_02_vehicle_grey_F",
+					"O_Plane_Fighter_02_F",
+					"O_Plane_Fighter_02_Stealth_F",
+					"O_Plane_CAS_02_Cluster_F",
+					"O_Plane_Fighter_02_Cluster_F"
+				]
 			]
 		]
 	]
