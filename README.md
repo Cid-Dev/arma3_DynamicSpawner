@@ -244,13 +244,15 @@ If so, set the variable `_deleteEverythingOnceCleared` to `true`. The main scrip
 If you need more customizations, you can inject custom scripts that can be executed at :
 
 - Trigger creation
+- Trigger activation
+- Trigger deactivation
 - Trigger cleared (when all spawned units are dead)
 
-To do so, you can set the variable `_extraScript` with compiled code for trigger creation and `_extraScriptClearedTrigger` for trigger cleared
+To do so, you can set the variable `_extraScript` with compiled code for trigger creation, `_extraScriptActivated` for trigger activation, `_extraScriptDeactivated` for trigger deactivation and `_extraScriptClearedTrigger` for trigger cleared
 
-If you need to add parameters for each scripts, you can set the array `_extraScriptParams` for the code located in `_extraScript` and the array `_extraScriptClearedTriggerParams` for `_extraScriptClearedTrigger`
+If you need to add parameters for each scripts, you can set the array `_extraScriptParams` for the code located in `_extraScript`, `_extraScriptParamsActivated` for the code located in `_extraScriptActivated`, `_extraScriptParamsDeactivated` for the code located in `_extraScriptDeactivated` and the array `_extraScriptClearedTriggerParams` for `_extraScriptClearedTrigger`
 
-The main script, when calling the custom ones, will add paramters to them, so **both scripts must look like** :
+The main script, when calling the custom ones, will add paramters to them, so **your custom scripts must look like** :
 
     params [
     	[ "_trigger", objNull, [ objNull ] ],
