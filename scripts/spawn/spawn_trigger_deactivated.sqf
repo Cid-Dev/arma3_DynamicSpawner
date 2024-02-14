@@ -26,4 +26,11 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	};
 
 	_trigger setVariable [ "_groupsToDespawn", _groupsToDespawn ];
+
+	private _detection_trigger = _trigger getVariable "_detection_trigger";
+	if (!isNil '_detection_trigger') then
+	{
+		_trigger setVariable [ "_detection_trigger", nil ];
+		deleteVehicle _detection_trigger;
+	};
 };
