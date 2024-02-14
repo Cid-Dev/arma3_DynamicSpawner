@@ -29,7 +29,31 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	[ _activationSide, _spawnSide ] call (_functions get "checkSides");
 	_selectedSideSpawnGroups = _groups get _spawnSide;
 
+	private _triggerId = _triggerDatas select INDEX_OF_TRIGGER_ID;
+	diag_log "Getting all spawn points related to the trigger.";
+	private _allInfantrySpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "INFANTRY_SPAWN_POINT_%1", _triggerId ] >= 0};
+	private _allVehicleSpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "VEHICLE_SPAWN_POINT_%1", _triggerId ] >= 0};
+	private _allAirSpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "AIR_SPAWN_POINT_%1", _triggerId ] >= 0};
 
+	diag_log "Getting all waypoints related to the trigger.";
+	private _allInfantryWaypoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "INFANTRY_WAYPOINT_%1", _triggerId ] >= 0};
+	private _allVehicleWaypoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "VEHICLE_WAYPOINT_%1", _triggerId ] >= 0};
+
+	private _trigger_points = createHashMapFromArray [
+		[
+			"spawnpoints", createHashMapFromArray [
+				[ "infantry", _allInfantrySpawnPoints ],
+				[ "vehicle", _allVehicleSpawnPoints ],
+				[ "air", _allAirSpawnPoints ]
+			]
+		],
+		[
+			"waypoints", createHashMapFromArray [
+				[ "infantry", _allInfantryWaypoints ],
+				[ "vehicle", _allVehicleWaypoints ]
+			]
+		]
+	];
 
 	diag_log format [ "Setting up activation side (%1) of trigger.", _activationSide ];
 	_trigger setTriggerActivation [ _activationSide, "PRESENT", true ];
@@ -49,6 +73,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	_trigger setVariable [ "_functions", _functions ];
 	_trigger setVariable [ "_groups", _selectedSideSpawnGroups ];
 	_trigger setVariable [ "_activationCallback", _activationCallback ];
+	_trigger setVariable [ "_trigger_points", _trigger_points ];
 	_trigger setVariable [ "_deactivationCallback", _deactivationCallback ];
 	_trigger setVariable [ "_handleClearedTrigger", _handleClearedTrigger ];
 	_trigger setVariable [ "_extraScriptClearedTrigger", _extraScriptClearedTrigger ];
