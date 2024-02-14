@@ -270,3 +270,6 @@ The pre-defined parameters are :
 - `_trigger` This parameter contains the trigger itself which will execute the script
 - `_functions` This is an HashMap containing utilities functions, defined in `scripts\spawn\configure_all_triggers.sqf` line 2 : `_functions`
 
+The code currently contains an example of custom scripts for trigger creation and trigger cleared.  
+The script `scripts\spawn\customizations\custom_script_create_trigger.sqf` contains code that will add a CSAT flag on the map at the location of the trigger and will "paint" the trigger zone in red  
+The script `scripts\spawn\customizations\zone_cleared.sqf` contains code that will replace the previously created CSAT flag by a NATO one, will remove the "red paint" and will add an hint message telling the zone is cleared
