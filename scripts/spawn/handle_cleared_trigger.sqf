@@ -17,13 +17,9 @@ waitUntil
 	isNil "_groupsToDespawn" || { !([ _groupsToDespawn, _functions ] call _contains_alive_squads) };
 };
 
-if (!isNil "_extraScriptClearedTrigger") then
-{
-	
-	private _customScriptParams = [ _trigger, _functions ];
-	_customScriptParams append _extraScriptClearedTriggerParams;
-	_customScriptParams call _extraScriptClearedTrigger;
-};
+private _customScriptParams = [ _trigger, _functions ];
+_customScriptParams append _extraScriptClearedTriggerParams;
+_customScriptParams call _extraScriptClearedTrigger;
 
 if (_deleteEverythingOnceCleared) then
 {

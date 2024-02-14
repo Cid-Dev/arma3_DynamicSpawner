@@ -28,6 +28,22 @@ private _extraScriptParams =
 	compile preprocessFileLineNumbers "scripts\spawn\customizations\zone_cleared.sqf"
 ];
 
+private _extraScriptActivated = {};
+private _extraScriptParamsActivated = [];
+
+private _extraScriptDeactivated = {};
+private _extraScriptParamsDeactivated = [];
+
+private _extraScript = compile preprocessFileLineNumbers "scripts\spawn\customizations\custom_script_create_trigger.sqf";
+private _extraScriptParams =
+[
+	compile preprocessFileLineNumbers "scripts\spawn\customizations\create_csat_flag.sqf",
+	compile preprocessFileLineNumbers "scripts\spawn\customizations\create_marker_flag.sqf",
+	compile preprocessFileLineNumbers "scripts\spawn\customizations\create_occupied_marker_zone.sqf",
+	compile preprocessFileLineNumbers "scripts\spawn\customizations\create_marker_zone.sqf",
+	compile preprocessFileLineNumbers "scripts\spawn\customizations\create_nato_flag.sqf",
+	compile preprocessFileLineNumbers "scripts\spawn\customizations\zone_cleared.sqf"
+];
 
 private _extraScriptClearedTrigger = compile preprocessFileLineNumbers "scripts\spawn\customizations\zone_cleared.sqf";
 private _extraScriptClearedTriggerParams =
@@ -120,6 +136,10 @@ private _groups = createHashMapFromArray [
 		_extraScriptClearedTrigger,
 		_extraScriptClearedTriggerParams,
 		_deleteEverythingOnceCleared,
-		_cleanupTrigger
+		_cleanupTrigger,
+		_extraScriptActivated,
+		_extraScriptParamsActivated,
+		_extraScriptDeactivated,
+		_extraScriptParamsDeactivated
 	] call _triggerScript;
 } forEach allMissionObjects "EmptyDetector";

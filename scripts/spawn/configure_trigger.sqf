@@ -12,7 +12,11 @@ params [
 	[ "_extraScriptClearedTrigger", {}, [ {} ]],
 	[ "_extraScriptClearedTriggerParams", [], [[]] ],
 	[ "_deleteEverythingOnceCleared", true, [ true ] ],
-	"_cleanupTrigger"
+	"_cleanupTrigger",
+	[ "_extraScriptActivated", {}, [ {} ]],
+	[ "_extraScriptParamsActivated", [], [[]] ],
+	[ "_extraScriptDeactivated", {}, [ {} ]],
+	[ "_extraScriptParamsDeactivated", [], [[]] ]
 ];
 
 if (isNull _trigger) then
@@ -31,13 +35,13 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 
 	private _triggerId = _triggerDatas select INDEX_OF_TRIGGER_ID;
 	diag_log "Getting all spawn points related to the trigger.";
-	private _allInfantrySpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "INFANTRY_SPAWN_POINT_%1", _triggerId ] >= 0};
-	private _allVehicleSpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "VEHICLE_SPAWN_POINT_%1", _triggerId ] >= 0};
-	private _allAirSpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "AIR_SPAWN_POINT_%1", _triggerId ] >= 0};
+	private _allInfantrySpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "INFANTRY_SPAWN_POINT_%1_", _triggerId ] >= 0};
+	private _allVehicleSpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "VEHICLE_SPAWN_POINT_%1_", _triggerId ] >= 0};
+	private _allAirSpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "AIR_SPAWN_POINT_%1_", _triggerId ] >= 0};
 
 	diag_log "Getting all waypoints related to the trigger.";
-	private _allInfantryWaypoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "INFANTRY_WAYPOINT_%1", _triggerId ] >= 0};
-	private _allVehicleWaypoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "VEHICLE_WAYPOINT_%1", _triggerId ] >= 0};
+	private _allInfantryWaypoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "INFANTRY_WAYPOINT_%1_", _triggerId ] >= 0};
+	private _allVehicleWaypoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "VEHICLE_WAYPOINT_%1_", _triggerId ] >= 0};
 
 	private _trigger_points = createHashMapFromArray [
 		[
@@ -63,12 +67,22 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		
 		"private _functions = thisTrigger getVariable '_functions';
 		private _activationCallback = thisTrigger getVariable '_activationCallback';
+		private _extraScriptActivated = thisTrigger getVariable '_extraScriptActivated';
+		private _extraScriptParamsActivated = thisTrigger getVariable '_extraScriptParamsActivated';
 		private _cleanupTrigger = thisTrigger getVariable '_cleanupTrigger';
-		[ thisTrigger, _functions, _cleanupTrigger ] call _activationCallback;",
+		[ thisTrigger, _functions, _cleanupTrigger ] call _activationCallback;
+		private _customScriptParams = [ thisTrigger, _functions ];
+		_customScriptParams append _extraScriptParamsActivated;
+		_customScriptParams spawn _extraScriptActivated;",
 
 		"private _functions = thisTrigger getVariable '_functions';
 		private _deactivationCallback = thisTrigger getVariable '_deactivationCallback';
-		[ thisTrigger, _functions ] call _deactivationCallback;"
+		private _extraScriptDeactivated = thisTrigger getVariable '_extraScriptDeactivated';
+		private _extraScriptParamsDeactivated = thisTrigger getVariable '_extraScriptParamsDeactivated';
+		[ thisTrigger, _functions ] call _deactivationCallback;
+		private _customScriptParams = [ thisTrigger, _functions ];
+		_customScriptParams append _extraScriptParamsDeactivated;
+		_customScriptParams spawn _extraScriptDeactivated;s"
 	];
 	_trigger setVariable [ "_functions", _functions ];
 	_trigger setVariable [ "_groups", _selectedSideSpawnGroups ];
@@ -80,13 +94,14 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	_trigger setVariable [ "_extraScriptClearedTriggerParams", _extraScriptClearedTriggerParams ];
 	_trigger setVariable [ "_deleteEverythingOnceCleared", _deleteEverythingOnceCleared ];
 	_trigger setVariable [ "_cleanupTrigger", _cleanupTrigger ];
+	_trigger setVariable [ "_extraScriptActivated", _extraScriptActivated ];
+	_trigger setVariable [ "_extraScriptParamsActivated", _extraScriptParamsActivated ];
+	_trigger setVariable [ "_extraScriptDeactivated", _extraScriptDeactivated ];
+	_trigger setVariable [ "_extraScriptParamsDeactivated", _extraScriptParamsDeactivated ];
 	_trigger setVariable [ "_groupsToDespawn", [] ];
-	if !(isNil "_extraScript") then
-	{
-		private _customScriptParams = [ _trigger, _functions ];
-		_customScriptParams append _extraScriptParams;
-		_customScriptParams call _extraScript;
-	};
+	private _customScriptParams = [ _trigger, _functions ];
+	_customScriptParams append _extraScriptParams;
+	_customScriptParams call _extraScript;
 }
 else
 {
