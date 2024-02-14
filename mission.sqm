@@ -20,10 +20,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={7736.6929,425.62845,18162.816};
-		dir[]={0.68564183,-0.49390596,0.5347451};
-		up[]={0.38946134,0.86951536,0.30374828};
-		aside[]={0.61499214,-2.9802322e-008,-0.78853333};
+		pos[]={7666.395,337.38062,18453.463};
+		dir[]={0.71281016,-0.54339355,0.44342431};
+		up[]={0.46140149,0.83947814,0.28702822};
+		aside[]={0.52821434,0,-0.84911114};
 	};
 };
 binarizationWanted=0;
@@ -97,6 +97,24 @@ class CustomAttributes
 							};
 						};
 					};
+				};
+			};
+		};
+		nAttributes=1;
+	};
+	class Category1
+	{
+		name="Scenario";
+		class Attribute0
+		{
+			property="ENH_AddObjectsToZeus";
+			expression="    if (!is3DEN && isServer && _value && !(allCurators isEqualTo [])) then    {      0 spawn      {        scriptName 'ENH_Attribute_AddObjectsToZeus';        while {true} do        {          {          _x addCuratorEditableObjects            [              entities [[], ['Logic'], true],              true            ];          } count allCurators;          sleep 60;        };      };    }";
+			class Value
+			{
+				class data
+				{
+					singleType="BOOL";
+					value=1;
 				};
 			};
 		};
@@ -286,24 +304,53 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={7773.48,125.17349,18406.377};
+						position[]={7773.48,125.1735,18406.377};
 					};
 					side="West";
 					flags=7;
 					class Attributes
 					{
+						name="zeus";
 						isPlayer=1;
 					};
 					id=16;
 					type="B_Soldier_F";
-					atlOffset=-7.6293945e-006;
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="speaker";
+							expression="_this setspeaker _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="STRING";
+									value="Male06ENG";
+								};
+							};
+						};
+						class Attribute1
+						{
+							property="pitch";
+							expression="_this setpitch _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="SCALAR";
+									value=0.99000001;
+								};
+							};
+						};
+						nAttributes=2;
+					};
 				};
 			};
 			class Attributes
 			{
 			};
 			id=15;
-			atlOffset=-7.6293945e-006;
 		};
 		class Item13
 		{
@@ -325,7 +372,7 @@ class Mission
 						class data
 						{
 							singleType="STRING";
-							value="";
+							value="zeus";
 						};
 					};
 				};
@@ -735,6 +782,7 @@ class Mission
 			name="VEHICLE_WAYPOINT_1_9";
 			id=50;
 			type="Logic";
+			atlOffset=-7.6293945e-006;
 		};
 		class Item44
 		{
@@ -747,6 +795,7 @@ class Mission
 			name="VEHICLE_WAYPOINT_1_10";
 			id=51;
 			type="Logic";
+			atlOffset=-7.6293945e-006;
 		};
 		class Item45
 		{
@@ -771,7 +820,6 @@ class Mission
 			name="VEHICLE_SPAWN_POINT_1_1";
 			id=53;
 			type="Logic";
-			atlOffset=7.6293945e-006;
 		};
 		class Item47
 		{
