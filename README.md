@@ -2,6 +2,12 @@
 
 This script is made to help people having triggers that spawn units at random locations and add waypoints to them
 
+
+
+https://github.com/Cid-Dev/arma3_DynamicSpawner/assets/26785799/c176c626-18b7-4a5a-acc1-d120713d2015
+
+
+
 ## Usage
 
 Copy the `scripts` folder at the root of your mission
