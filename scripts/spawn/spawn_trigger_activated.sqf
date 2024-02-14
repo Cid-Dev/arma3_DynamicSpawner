@@ -52,24 +52,18 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		_AmountsOfVehicleWaypoints pushBack (_AmountsOfVehicleWaypoints select 0);
 	};
 
-/*
-	private _AmountsOfAirWaypointsStr = (_triggerDatas select INDEX_OF_AMOUNT_OF_AIR_WAYPOINTS) splitString ",";
-	private _AmountsOfAirWaypoints = [ _AmountsOfAirWaypointsStr ] call _string_array_to_int_array;
-	if (count _AmountsOfAirWaypoints == 1) then
-	{
-		_AmountsOfAirWaypoints pushBack (_AmountsOfAirWaypoints select 0);
-	};
-*/
+	private _points = _trigger getVariable "_trigger_points";
 
-	diag_log "Getting all spawn points related to the trigger.";
-	private _allInfantrySpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "INFANTRY_SPAWN_POINT_%1", _triggerId ] >= 0};
-	private _allVehicleSpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "VEHICLE_SPAWN_POINT_%1", _triggerId ] >= 0};
-	private _allAirSpawnPoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "AIR_SPAWN_POINT_%1", _triggerId ] >= 0};
+	private _spawnpoints = _points get "spawnpoints";
 
-	diag_log "Getting all waypoints related to the trigger.";
-	private _allInfantryWaypoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "INFANTRY_WAYPOINT_%1", _triggerId ] >= 0};
-	private _allVehicleWaypoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "VEHICLE_WAYPOINT_%1", _triggerId ] >= 0};
-	//private _allAirWaypoints = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "AIR_WAYPOINT_%1", _triggerId ] >= 0};
+	private _allInfantrySpawnPoints = _spawnpoints get "infantry";
+	private _allVehicleSpawnPoints = _spawnpoints get "vehicle";
+	private _allAirSpawnPoints = _spawnpoints get "air";
+
+	private _waypoints = _points get "waypoints";
+
+	private _allInfantryWaypoints = _waypoints get "infantry";
+	private _allVehicleWaypoints = _waypoints get "vehicle";
 
 	private _get_n_random_elements_from_array = _functions get "get_n_random_elements_from_array";
 
@@ -79,15 +73,10 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	private _airSpawnPoints = [ _allAirSpawnPoints, _AmountOfAirSquads ] call _get_n_random_elements_from_array;
 	diag_log format [ "Got %1 infantry squads spawn points, %2 vehicle squads spawn points and %3 air squads spawn points.", str count _infantrySpawnPoints, str count _vehicleSpawnPoints, str count _airSpawnPoints ];
 
-	diag_log "Getting the desired amount of waypoints for each squads types (caped by the amount of available points).";
-	//private _triggerDatas = _triggerText splitString "_";
-	diag_log format [ "Got %1 infantry squads waypoints, %2 vehicle squads waypoints and %3 air squads waypoints.", str count _infantrySpawnPoints, str count _vehicleSpawnPoints, str count _airSpawnPoints ];
-
 	private _groups = _trigger getVariable "_groups";
 	private _spawnedGroups = _trigger getVariable "_groupsToDespawn";
 	private _loop_waypoints_to_a_group = _functions get "loop_waypoints_to_a_group";
 	private _loop_waypoints_to_a_group_file_path = _functions get "loop_waypoints_to_a_group_file_path";
-
 
 	private _spawnLandUnits = {
 		params [
@@ -132,7 +121,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			_groupToSpawn setVariable [ "_waypoints", _waypoints ];
 			_groupToSpawn setVariable [ "_loop_waypoints_to_a_group_file_path", _loop_waypoints_to_a_group_file_path ];
 			diag_log "Setting up waypoints.";
-			[ _groupToSpawn, 0 ] call _loop_waypoints_to_a_group;
+			[ _groupToSpawn, 0 ] spawn _loop_waypoints_to_a_group;
 		};
 	};
 
@@ -150,7 +139,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		_allInfantryWaypoints,
 		_loop_waypoints_to_a_group_file_path,
 		_loop_waypoints_to_a_group
-	] call _spawnLandUnits;
+	] spawn _spawnLandUnits;
 
 	[
 		"vehicle",
@@ -166,7 +155,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		_allVehicleWaypoints,
 		_loop_waypoints_to_a_group_file_path,
 		_loop_waypoints_to_a_group
-	] call _spawnLandUnits;
+	] spawn _spawnLandUnits;
 
 
 	diag_log "Spawning air vehicles.";
@@ -195,8 +184,6 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		_waypoint setWaypointType "LOITER";
 		_waypoint setWaypointLoiterType "CIRCLE_L";
 		_waypoint setWaypointLoiterRadius 500;
-
-		[ _groupToSpawn, 0 ] call _loop_waypoints_to_a_group;
 	};
 
 	_trigger setVariable [ "_groupsToDespawn", _spawnedGroups ];
