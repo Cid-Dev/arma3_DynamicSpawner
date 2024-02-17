@@ -252,6 +252,13 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	private _extraScriptClearedTrigger = _trigger getVariable "_extraScriptClearedTrigger";
 	private _extraScriptClearedTriggerParams = _trigger getVariable "_extraScriptClearedTriggerParams";
 	private _deleteEverythingOnceCleared = _trigger getVariable "_deleteEverythingOnceCleared";
+
+	private _extraScriptActivated = _trigger getVariable '_extraScriptActivated';
+	private _extraScriptParamsActivated = _trigger getVariable '_extraScriptParamsActivated';
+	private _customScriptParams = [ _trigger, _functions ];
+	_customScriptParams append _extraScriptParamsActivated;
+	_customScriptParams call _extraScriptActivated;
+
 	private _clearedZoneHandler = [ _trigger, _functions, _extraScriptClearedTrigger, _extraScriptClearedTriggerParams, _deleteEverythingOnceCleared, _cleanupTrigger ] spawn _handleClearedTrigger;
 	_trigger setVariable [ "_clearedZoneHandler", _clearedZoneHandler ];
 };

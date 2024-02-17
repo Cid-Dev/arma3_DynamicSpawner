@@ -33,4 +33,10 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		_trigger setVariable [ "_detection_trigger", nil ];
 		deleteVehicle _detection_trigger;
 	};
+
+	private _extraScriptDeactivated = _trigger getVariable '_extraScriptDeactivated';
+	private _extraScriptParamsDeactivated = _trigger getVariable '_extraScriptParamsDeactivated';
+	private _customScriptParams = [ _trigger, _functions ];
+	_customScriptParams append _extraScriptParamsDeactivated;
+	_customScriptParams call _extraScriptDeactivated;
 };
