@@ -92,7 +92,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	_trigger setVariable [ "_extraScriptParamsActivated", _extraScriptParamsActivated ];
 	_trigger setVariable [ "_extraScriptDeactivated", _extraScriptDeactivated ];
 	_trigger setVariable [ "_extraScriptParamsDeactivated", _extraScriptParamsDeactivated ];
-	_trigger setVariable [ "_groupsToDespawn", [] ];
+	_trigger setVariable [ "_groupsToDespawn", createHashMap ];
 	private _customScriptParams = [ _trigger, _functions ];
 	_customScriptParams append _extraScriptParams;
 	_customScriptParams call _extraScript;

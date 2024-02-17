@@ -17,15 +17,23 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	private _handleClearedTrigger = _trigger getVariable "_clearedZoneHandler";
 	terminate _handleClearedTrigger;
 	
-	private _groupsToDespawn = _trigger getVariable "_groupsToDespawn";
+	private _groupsTypeToDespawn = _trigger getVariable "_groupsToDespawn";
 	//{ _debugGroups pushBack groupId _x; } forEach _spawnedGroups;
 
-	for "_i" from count _groupsToDespawn - 1 to 0 step -1 do {
-		private _groupToDelete = _groupsToDespawn deleteAt _i;
-		_groupToDelete call _delete_group_and_its_members;
-	};
+	{
+		private _groupsToDespawn = _groupsTypeToDespawn get _x;
+		if (!isNil "_groupsToDespawn") then
+		{
+			for "_i" from count _groupsToDespawn - 1 to 0 step -1 do {
+				private _groupToDelete = _groupsToDespawn deleteAt _i;
+				_groupToDelete call _delete_group_and_its_members;
+			};
 
-	_trigger setVariable [ "_groupsToDespawn", _groupsToDespawn ];
+			_groupsTypeToDespawn set [ _x, _groupsToDespawn ];
+		};
+	} forEach [ "infantry", "vehicle", "air" ];
+
+	_trigger setVariable [ "_groupsToDespawn", _groupsTypeToDespawn ];
 
 	private _detection_trigger = _trigger getVariable "_detection_trigger";
 	if (!isNil '_detection_trigger') then
