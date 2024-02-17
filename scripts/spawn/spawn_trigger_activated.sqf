@@ -121,7 +121,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			_groupToSpawn setVariable [ "_waypoints", _waypoints ];
 			_groupToSpawn setVariable [ "_loop_waypoints_to_a_group_file_path", _loop_waypoints_to_a_group_file_path ];
 			diag_log "Setting up waypoints.";
-			[ _groupToSpawn, 0 ] spawn _loop_waypoints_to_a_group;
+			[ _groupToSpawn, 0 ] call _loop_waypoints_to_a_group;
 		};
 	};
 
@@ -139,7 +139,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		_allInfantryWaypoints,
 		_loop_waypoints_to_a_group_file_path,
 		_loop_waypoints_to_a_group
-	] spawn _spawnLandUnits;
+	] call _spawnLandUnits;
 
 	[
 		"vehicle",
@@ -155,7 +155,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		_allVehicleWaypoints,
 		_loop_waypoints_to_a_group_file_path,
 		_loop_waypoints_to_a_group
-	] spawn _spawnLandUnits;
+	] call _spawnLandUnits;
 
 
 	diag_log "Spawning air vehicles.";
