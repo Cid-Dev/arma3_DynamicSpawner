@@ -82,7 +82,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		[ thisTrigger, _functions ] call _deactivationCallback;
 		private _customScriptParams = [ thisTrigger, _functions ];
 		_customScriptParams append _extraScriptParamsDeactivated;
-		_customScriptParams spawn _extraScriptDeactivated;s"
+		_customScriptParams spawn _extraScriptDeactivated;"
 	];
 	_trigger setVariable [ "_functions", _functions ];
 	_trigger setVariable [ "_groups", _selectedSideSpawnGroups ];
