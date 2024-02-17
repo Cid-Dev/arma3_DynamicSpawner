@@ -7,14 +7,18 @@ params [
 	"_cleanupTrigger"
 ];
 
-private _groupsToDespawn = _trigger getVariable "_groupsToDespawn";
-private _amountOfGroupsToDespawn = count _groupsToDespawn - 1;
+private _groupsTypeToDespawn = _trigger getVariable "_groupsToDespawn";
 private _contains_alive_squads = _functions get "contains_alive_squads";
 
 waitUntil
 {
 	sleep 10;
-	isNil "_groupsToDespawn" || { !([ _groupsToDespawn, _functions ] call _contains_alive_squads) };
+	private _stopCondition = true;
+	{
+		private _groupsToDespawn = _groupsTypeToDespawn get _x;
+		_stopCondition = _stopCondition && { isNil "_groupsToDespawn" || { !([ _groupsToDespawn, _functions ] call _contains_alive_squads) } };
+	} forEach [ "infantry", "vehicle", "air" ];
+	_stopCondition;
 };
 
 private _customScriptParams = [ _trigger, _functions ];

@@ -22,11 +22,12 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	private _checkSides = _functions get "checkSides";
 	private _activationSide = _triggerDatas select INDEX_OF_ACTIVATION_SIDE;
 	private _spawnSideName = _triggerDatas select INDEX_OF_SPAWN_SIDE;
-	diag_log format [ "Checking activation side %1 and spawn side %2 of trigger.", _activationSide, _spawnSide ];
 	[ _activationSide, _spawnSideName ] call _checkSides;
 
 	private _string_to_side = _functions get "string_to_side";
 	private _spawnSide = _spawnSideName call _string_to_side;
+
+	diag_log format [ "Checking activation side %1 and spawn side %2 of trigger.", _activationSide, _spawnSide ];
 
 	diag_log "Getting amount of different squads.";
 	private _AmountOfInfantrySquads = parseNumber (_triggerDatas select INDEX_OF_AMOUNT_OF_INFANTRY_SQUADS);
@@ -74,7 +75,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	diag_log format [ "Got %1 infantry squads spawn points, %2 vehicle squads spawn points and %3 air squads spawn points.", str count _infantrySpawnPoints, str count _vehicleSpawnPoints, str count _airSpawnPoints ];
 
 	private _groups = _trigger getVariable "_groups";
-	private _spawnedGroups = _trigger getVariable "_groupsToDespawn";
+	private _spawnedGroupsTypes = _trigger getVariable "_groupsToDespawn";
 	private _loop_waypoints_to_a_group = _functions get "loop_waypoints_to_a_group";
 	private _loop_waypoints_to_a_group_file_path = _functions get "loop_waypoints_to_a_group_file_path";
 
@@ -88,7 +89,6 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			"_spawnSide",
 			"_minRank",
 			"_maxRank",
-			"_spawnedGroups",
 			"_AmountsOfLandUnitsWaypoints",
 			"_allLandUnitsWaypoints",
 			"_loop_waypoints_to_a_group_file_path",
@@ -97,6 +97,8 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		diag_log format [ "Spawning %1 squads.", _typeOfSquadForLogMessage ];
 		private _landUnitsGroup = [ _groups get _hashMapKey, count _landUnitsSpawnPoints, false ] call _get_n_random_elements_from_array;
 		private _amountOfLandUnitsToSpawn = count _landUnitsGroup - 1;
+		private _spawnedGroups = [];
+
 		for "_i" from 0 to _amountOfLandUnitsToSpawn do {
 			diag_log format [ "Spawning group %1.", str _i ];
 			private _groupToSpawn = [
@@ -121,11 +123,12 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			_groupToSpawn setVariable [ "_waypoints", _waypoints ];
 			_groupToSpawn setVariable [ "_loop_waypoints_to_a_group_file_path", _loop_waypoints_to_a_group_file_path ];
 			diag_log "Setting up waypoints.";
-			[ _groupToSpawn, 0 ] spawn _loop_waypoints_to_a_group;
+			[ _groupToSpawn, 0 ] call _loop_waypoints_to_a_group;
 		};
+		_spawnedGroups;
 	};
 
-	[
+	private _infantryGroups = [
 		"infantry",
 		"INFANTRY",
 		_groups,
@@ -134,14 +137,13 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		_spawnSide,
 		RANK_PRIVATE,
 		RANK_CAPTAIN,
-		_spawnedGroups,
 		_AmountsOfInfantryWaypoints,
 		_allInfantryWaypoints,
 		_loop_waypoints_to_a_group_file_path,
 		_loop_waypoints_to_a_group
-	] spawn _spawnLandUnits;
+	] call _spawnLandUnits;
 
-	[
+	private _vehicleGroups = [
 		"vehicle",
 		"VEHICLE",
 		_groups,
@@ -150,17 +152,17 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		_spawnSide,
 		RANK_LIEUTENANT,
 		RANK_MAJOR,
-		_spawnedGroups,
 		_AmountsOfVehicleWaypoints,
 		_allVehicleWaypoints,
 		_loop_waypoints_to_a_group_file_path,
 		_loop_waypoints_to_a_group
-	] spawn _spawnLandUnits;
+	] call _spawnLandUnits;
 
 
 	diag_log "Spawning air vehicles.";
 	private _airUnitsGroup = [ _groups get "AIR", count _airSpawnPoints, false ] call _get_n_random_elements_from_array;
 	private _amountOfAirUnitsToSpawn = count _airUnitsGroup - 1;
+	private _airGroups = [];
 	if (_amountOfAirUnitsToSpawn >= 0) then
 	{
 		private _detection_trigger = createTrigger [ "EmptyDetector", getPos _trigger ];
@@ -209,7 +211,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			""
 		];
 
-		private _airGroups = [];
+		
 
 		for "_i" from 0 to _amountOfAirUnitsToSpawn do {
 			diag_log format [ "Spawning group %1.", str _i ];
@@ -228,7 +230,6 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 
 			_groupToSpawn deleteGroupWhenEmpty true;
 			diag_log format [ "Group %1 is %2.", str _i, groupId _groupToSpawn ];
-			_spawnedGroups pushBack _groupToSpawn;
 			_airGroups pushBack _groupToSpawn;
 
 			private _triggerPosition = getPos _trigger;
@@ -245,13 +246,22 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 
 		_trigger setVariable [ "_detection_trigger", _detection_trigger ];
 	};
-	_trigger setVariable [ "_groupsToDespawn", _spawnedGroups ];
-	private _spawnedGroups = _trigger getVariable "_groupsToDespawn";
+
+	_spawnedGroupsTypes insert [ [ "infantry", _infantryGroups ], [ "vehicle", _vehicleGroups ], [ "air", _airGroups ] ];
+
+	_trigger setVariable [ "_groupsToDespawn", _spawnedGroupsTypes ];
 
 	private _handleClearedTrigger = _trigger getVariable "_handleClearedTrigger";
 	private _extraScriptClearedTrigger = _trigger getVariable "_extraScriptClearedTrigger";
 	private _extraScriptClearedTriggerParams = _trigger getVariable "_extraScriptClearedTriggerParams";
 	private _deleteEverythingOnceCleared = _trigger getVariable "_deleteEverythingOnceCleared";
+
+	private _extraScriptActivated = _trigger getVariable '_extraScriptActivated';
+	private _extraScriptParamsActivated = _trigger getVariable '_extraScriptParamsActivated';
+	private _customScriptParams = [ _trigger, _functions ];
+	_customScriptParams append _extraScriptParamsActivated;
+	_customScriptParams call _extraScriptActivated;
+
 	private _clearedZoneHandler = [ _trigger, _functions, _extraScriptClearedTrigger, _extraScriptClearedTriggerParams, _deleteEverythingOnceCleared, _cleanupTrigger ] spawn _handleClearedTrigger;
 	_trigger setVariable [ "_clearedZoneHandler", _clearedZoneHandler ];
 };
