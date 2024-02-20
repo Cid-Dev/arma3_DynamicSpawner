@@ -13,3 +13,4 @@
 #define RANK_CAPTAIN 4
 #define RANK_MAJOR 5
 #define RANK_COLONEL 6
+#define TRIGGER_NAME_PATTERN "DynamicSpawn(_(((WE)|(EA))ST)|(GUER)|(CIV)){2}(_\d+(,\d+)?){7}/i"
