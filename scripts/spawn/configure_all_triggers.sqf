@@ -1,3 +1,5 @@
+#include "spawn_constants.hpp"
+
 private _triggerScript = compile preprocessFileLineNumbers "scripts\spawn\configure_trigger.sqf";
 private _functions = createHashMapFromArray [
 	[ "checkSides", compile preprocessFileLineNumbers "scripts\spawn\check_sides.sqf" ],
@@ -111,10 +113,16 @@ private _groups = createHashMapFromArray [
 
 // ----------------------------------------------
 
-{ 
-	diag_log format [ "Setting up trigger %1 if needed.", triggerText _x ];
+private _all_spawn_triggers = (allMissionObjects "EmptyDetector") select { triggerText _x regexMatch TRIGGER_NAME_PATTERN };
+private _length = count _all_spawn_triggers;
+
+for "_i" from 0 to _length - 1 do
+{
+	private _trigger = _all_spawn_triggers select _i;
+	diag_log format [ "Setting up trigger %1 if needed.", triggerText _trigger ];
+
 	[
-		_x,
+		_trigger,
 		_functions,
 		_groups,
 		_activationCallback,
@@ -131,4 +139,4 @@ private _groups = createHashMapFromArray [
 		_extraScriptDeactivated,
 		_extraScriptParamsDeactivated
 	] call _triggerScript;
-} forEach allMissionObjects "EmptyDetector";
+};

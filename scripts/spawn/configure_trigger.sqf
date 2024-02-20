@@ -67,15 +67,11 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		
 		"private _functions = thisTrigger getVariable '_functions';
 		private _activationCallback = thisTrigger getVariable '_activationCallback';
-		private _extraScriptActivated = thisTrigger getVariable '_extraScriptActivated';
-		private _extraScriptParamsActivated = thisTrigger getVariable '_extraScriptParamsActivated';
 		private _cleanupTrigger = thisTrigger getVariable '_cleanupTrigger';
 		[ thisTrigger, _functions, _cleanupTrigger ] spawn _activationCallback;",
 
 		"private _functions = thisTrigger getVariable '_functions';
 		private _deactivationCallback = thisTrigger getVariable '_deactivationCallback';
-		private _extraScriptDeactivated = thisTrigger getVariable '_extraScriptDeactivated';
-		private _extraScriptParamsDeactivated = thisTrigger getVariable '_extraScriptParamsDeactivated';
 		[ thisTrigger, _functions ] spawn _deactivationCallback;"
 	];
 	_trigger setVariable [ "_functions", _functions ];

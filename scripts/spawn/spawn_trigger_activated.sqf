@@ -183,7 +183,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 					for '_j' from 0 to count thisList - 1 do {
 						private _detectedUnit = thisList select _j;
 						private _detectedUnitPosition = getPos _detectedUnit;
-						private _waypoint = _group addWaypoint [ [ _detectedUnitPosition select 0, _detectedUnitPosition select 1, 250 ], 0 ];
+						private _waypoint = _group addWaypoint [ _detectedUnitPosition, 0 ];
 						_waypoint setWaypointType 'SAD';
 
 						private _index = currentWaypoint _group;
