@@ -12,7 +12,7 @@ class EditorData
 	};
 	class ItemIDProvider
 	{
-		nextID=71;
+		nextID=75;
 	};
 	class MarkerIDProvider
 	{
@@ -21,9 +21,9 @@ class EditorData
 	class Camera
 	{
 		pos[]={7759.6074,145.98395,18368.527};
-		dir[]={0.34224126,-0.37361637,0.86213791};
-		up[]={0.13784954,0.92758334,0.34725598};
-		aside[]={0.92944533,7.4505806e-009,-0.36896014};
+		dir[]={0.48775798,-0.40963405,0.77090549};
+		up[]={0.21902192,0.91224879,0.34616572};
+		aside[]={0.84505868,-6.0535967e-008,-0.5346759};
 	};
 };
 binarizationWanted=0;
@@ -444,6 +444,19 @@ class Mission
 					{
 						class Attribute0
 						{
+							property="allowDamage";
+							expression="_this allowdamage _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="BOOL";
+									value=1;
+								};
+							};
+						};
+						class Attribute1
+						{
 							property="speaker";
 							expression="_this setspeaker _value;";
 							class Value
@@ -455,7 +468,7 @@ class Mission
 								};
 							};
 						};
-						class Attribute1
+						class Attribute2
 						{
 							property="pitch";
 							expression="_this setpitch _value;";
@@ -468,7 +481,20 @@ class Mission
 								};
 							};
 						};
-						nAttributes=2;
+						class Attribute3
+						{
+							property="enableStamina";
+							expression="_this enablestamina _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="BOOL";
+									value=1;
+								};
+							};
+						};
+						nAttributes=4;
 					};
 				};
 			};
