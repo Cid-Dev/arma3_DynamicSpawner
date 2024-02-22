@@ -36,6 +36,12 @@ private _extraScriptParamsActivated = [];
 private _extraScriptDeactivated = {};
 private _extraScriptParamsDeactivated = [];
 
+private _extraScriptDetected = {};
+private _extraScriptParamsDetected = [];
+
+private _extraScriptUndetected = {};
+private _extraScriptParamsUndetected = [];
+
 private _extraScriptClearedTrigger = compile preprocessFileLineNumbers "scripts\spawn\customizations\zone_cleared.sqf";
 private _extraScriptClearedTriggerParams =
 [
@@ -137,6 +143,10 @@ for "_i" from 0 to _length - 1 do
 		_extraScriptActivated,
 		_extraScriptParamsActivated,
 		_extraScriptDeactivated,
-		_extraScriptParamsDeactivated
+		_extraScriptParamsDeactivated,
+		_extraScriptDetected,
+		_extraScriptParamsDetected,
+		_extraScriptUndetected,
+		_extraScriptParamsUndetected
 	] call _triggerScript;
 };
