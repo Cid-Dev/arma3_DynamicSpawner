@@ -188,6 +188,25 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			_groupToSpawn setBehaviourStrong "SAFE";
 			_groupToSpawn setSpeedMode "LIMITED";
 			_groupToSpawn deleteGroupWhenEmpty true;
+
+			private _units = units _groupToSpawn;
+			for "_i" from 0 to (count _units) - 1 do
+			{
+				(_units select _i) addEventHandler ["Killed", {
+					params ["_unit", "_killer", "_instigator", "_useEffects"];
+					
+					// remove body after 10 minutes
+					_unit spawn {
+						params [ "_unitToRemove" ];
+						sleep 100;
+						if (!isNil "_unitToRemove" && { !isNull _unitToRemove && { !alive _unitToRemove } }) then
+						{
+							deleteVehicle _unitToRemove;
+						}
+					};
+				}];
+			};
+
 			diag_log format [ "Group %1 is %2.", str _i, groupId _groupToSpawn ];
 			_spawnedGroups pushBack _groupToSpawn;
 
