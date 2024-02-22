@@ -110,8 +110,11 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 				[ _minRank, _maxRank ],
 				[],
 				[],
+				[ -1, 1],
 				floor random 360
 			] call BIS_fnc_spawnGroup;
+			_groupToSpawn setBehaviourStrong "SAFE";
+			_groupToSpawn setSpeedMode "LIMITED";
 			_groupToSpawn deleteGroupWhenEmpty true;
 			diag_log format [ "Group %1 is %2.", str _i, groupId _groupToSpawn ];
 			_spawnedGroups pushBack _groupToSpawn;
@@ -227,6 +230,9 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			private _groupToSpawn = _spawnedAircraft select 2;
 
 			_groupToSpawn setCombatMode "RED";
+			
+			_groupToSpawn setBehaviourStrong "SAFE";
+			_groupToSpawn setSpeedMode "LIMITED";
 
 			_groupToSpawn deleteGroupWhenEmpty true;
 			diag_log format [ "Group %1 is %2.", str _i, groupId _groupToSpawn ];
