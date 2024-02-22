@@ -198,7 +198,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 					// remove body after 10 minutes
 					_unit spawn {
 						params [ "_unitToRemove" ];
-						sleep 100;
+						sleep 600;
 						if (!isNil "_unitToRemove" && { !isNull _unitToRemove && { !alive _unitToRemove } }) then
 						{
 							deleteVehicle _unitToRemove;
