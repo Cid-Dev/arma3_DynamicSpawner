@@ -16,7 +16,11 @@ params [
 	[ "_extraScriptActivated", {}, [ {} ]],
 	[ "_extraScriptParamsActivated", [], [[]] ],
 	[ "_extraScriptDeactivated", {}, [ {} ]],
-	[ "_extraScriptParamsDeactivated", [], [[]] ]
+	[ "_extraScriptParamsDeactivated", [], [[]] ],
+	[ "_extraScriptDetected", {}, [ {} ]],
+	[ "_extraScriptParamsDetected", [], [[]] ],
+	[ "_extraScriptUndetected", {}, [ {} ]],
+	[ "_extraScriptParamsUndetected", [], [[]] ]
 ];
 
 if (isNull _trigger) then
@@ -88,6 +92,10 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	_trigger setVariable [ "_extraScriptParamsActivated", _extraScriptParamsActivated ];
 	_trigger setVariable [ "_extraScriptDeactivated", _extraScriptDeactivated ];
 	_trigger setVariable [ "_extraScriptParamsDeactivated", _extraScriptParamsDeactivated ];
+	_trigger setVariable [ "_extraScriptDetected", _extraScriptDetected ];
+	_trigger setVariable [ "_extraScriptParamsDetected", _extraScriptParamsDetected ];
+	_trigger setVariable [ "_extraScriptUndetected", _extraScriptUndetected ];
+	_trigger setVariable [ "_extraScriptParamsUndetected", _extraScriptParamsUndetected ];
 	_trigger setVariable [ "_groupsToDespawn", createHashMap ];
 	private _customScriptParams = [ _trigger, _functions ];
 	_customScriptParams append _extraScriptParams;

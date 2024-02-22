@@ -29,6 +29,78 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 
 	diag_log format [ "Checking activation side %1 and spawn side %2 of trigger.", _activationSide, _spawnSide ];
 
+	
+	private _detection_trigger = createTrigger [ "EmptyDetector", getPos _trigger ];
+	_triggerArea = triggerArea _trigger;
+	_detection_trigger setTriggerArea _triggerArea;
+	_detection_trigger setTriggerActivation [ _activationSide, format [ "%1 D", _spawnSide ], true ];
+	_detection_trigger setTriggerStatements [
+		"this",
+		
+		"private _airGroups = thisTrigger getVariable '_airGroups';
+		private _functions = thisTrigger getVariable '_functions';
+		private _contains_alive_units = _functions get 'contains_alive_units';
+		private _extraScriptDetected = thisTrigger getVariable '_extraScriptDetected';
+		private _extraScriptParamsDetected = thisTrigger getVariable '_extraScriptParamsDetected';
+		private _triggerPosition = getPos thisTrigger;
+		
+		for '_i' from 0 to count _airGroups - 1 do {
+			private _group = _airGroups select _i;
+			if (_group call _contains_alive_units) then
+			{
+				for '_j' from 0 to count thisList - 1 do {
+					private _detectedUnit = thisList select _j;
+					private _detectedUnitPosition = getPos _detectedUnit;
+					private _waypoint = _group addWaypoint [ _detectedUnitPosition, 0 ];
+					_waypoint setWaypointType 'SAD';
+
+					private _index = currentWaypoint _group;
+					private _type = waypointType [ _group, _index ];
+
+					for '_k' from (count waypoints _group - 1) to (_index + 1) step -1 do {
+						if (waypointType [ _group, _k ] in [ '', 'LOITER' ]) then
+						{
+							deleteWaypoint [ _group, _k ];
+						};
+					};
+
+					if (_type in [ '', 'LOITER' ]) then
+					{
+						_group setCurrentWaypoint [ _group, _index + 1 ];
+					};
+				};
+				private _loiterWaypoint = _group addWaypoint [ [ _triggerPosition select 0, _triggerPosition select 1, 250 ], 0 ];
+				_loiterWaypoint setWaypointType 'LOITER';
+				_loiterWaypoint setWaypointLoiterType 'CIRCLE_L';
+				_loiterWaypoint setWaypointLoiterRadius 500;
+			};
+		};
+
+		private _customScriptParams = [ thisTrigger, _functions ];
+		_customScriptParams append _extraScriptParamsDetected;
+		_customScriptParams call _extraScriptDetected;",
+		
+		"private _extraScriptUndetected = thisTrigger getVariable '_extraScriptUndetected';
+		private _extraScriptParamsUndetected = thisTrigger getVariable '_extraScriptParamsUndetected';
+		private _customScriptParams = [ thisTrigger, _functions ];
+		_customScriptParams append _extraScriptParamsUndetected;
+		_customScriptParams call _extraScriptUndetected;"
+	];
+	
+	_detection_trigger setVariable [ "_functions", _functions ];
+
+	private _extraScriptDetected = _trigger getVariable "_extraScriptDetected";
+	private _extraScriptParamsDetected = _trigger getVariable "_extraScriptParamsDetected";
+	_detection_trigger setVariable [ "_extraScriptDetected", _extraScriptDetected ];
+	_detection_trigger setVariable [ "_extraScriptParamsDetected", _extraScriptParamsDetected ];
+
+	private _extraScriptUndetected = _trigger getVariable "_extraScriptUndetected";
+	private _extraScriptParamsUndetected = _trigger getVariable "_extraScriptParamsUndetected";
+	_detection_trigger setVariable [ "_extraScriptUndetected", _extraScriptUndetected ];
+	_detection_trigger setVariable [ "_extraScriptParamsUndetected", _extraScriptParamsUndetected ];
+	
+	_trigger setVariable [ "_detection_trigger", _detection_trigger ];
+
 	diag_log "Getting amount of different squads.";
 	private _AmountOfInfantrySquads = parseNumber (_triggerDatas select INDEX_OF_AMOUNT_OF_INFANTRY_SQUADS);
 	private _AmountOfVehicleSquads = parseNumber (_triggerDatas select INDEX_OF_AMOUNT_OF_VEHICLE_SQUADS);
@@ -165,54 +237,6 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	private _airGroups = [];
 	if (_amountOfAirUnitsToSpawn >= 0) then
 	{
-		private _detection_trigger = createTrigger [ "EmptyDetector", getPos _trigger ];
-		_triggerArea = triggerArea _trigger;
-		_detection_trigger setTriggerArea _triggerArea;
-		_detection_trigger setTriggerActivation [ _activationSide, format [ "%1 D", _spawnSide ], true ];
-		_detection_trigger setTriggerStatements [
-			"this",
-			
-			"private _groups = thisTrigger getVariable '_groups';
-			private _contains_alive_units = thisTrigger getVariable '_contains_alive_units';
-			private _triggerPosition = getPos thisTrigger;
-			
-			for '_i' from 0 to count _groups - 1 do {
-				private _group = _groups select _i;
-				if (_group call _contains_alive_units) then
-				{
-					for '_j' from 0 to count thisList - 1 do {
-						private _detectedUnit = thisList select _j;
-						private _detectedUnitPosition = getPos _detectedUnit;
-						private _waypoint = _group addWaypoint [ _detectedUnitPosition, 0 ];
-						_waypoint setWaypointType 'SAD';
-
-						private _index = currentWaypoint _group;
-						private _type = waypointType [ _group, _index ];
-
-						for '_k' from (count waypoints _group - 1) to (_index + 1) step -1 do {
-							if (waypointType [ _group, _k ] in [ '', 'LOITER' ]) then
-							{
-								deleteWaypoint [ _group, _k ];
-							};
-						};
-
-						if (_type in [ '', 'LOITER' ]) then
-						{
-							_group setCurrentWaypoint [ _group, _index + 1 ];
-						};
-					};
-					private _loiterWaypoint = _group addWaypoint [ [ _triggerPosition select 0, _triggerPosition select 1, 250 ], 0 ];
-					_loiterWaypoint setWaypointType 'LOITER';
-					_loiterWaypoint setWaypointLoiterType 'CIRCLE_L';
-					_loiterWaypoint setWaypointLoiterRadius 500;
-				};
-			};",
-			
-			""
-		];
-
-		
-
 		for "_i" from 0 to _amountOfAirUnitsToSpawn do {
 			diag_log format [ "Spawning group %1.", str _i ];
 			private _spawnPointPosition = getPosATL (_airSpawnPoints select _i);
@@ -240,11 +264,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			_waypoint setWaypointLoiterRadius 500;
 		};
 
-		private _contains_alive_units = _functions get 'contains_alive_units';
-		_detection_trigger setVariable [ "_groups", _airGroups ];
-		_detection_trigger setVariable [ "_contains_alive_units", _contains_alive_units ];
-
-		_trigger setVariable [ "_detection_trigger", _detection_trigger ];
+		_detection_trigger setVariable [ "_airGroups", _airGroups ];
 	};
 
 	_spawnedGroupsTypes insert [ [ "infantry", _infantryGroups ], [ "vehicle", _vehicleGroups ], [ "air", _airGroups ] ];
