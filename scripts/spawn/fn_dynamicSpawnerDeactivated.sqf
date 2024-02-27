@@ -1,8 +1,7 @@
 #define NUMBER_OF_PARTS 10
 
 params [
-	[ "_trigger", objNull, [ objNull ] ],
-	"_functions"
+	[ "_trigger", objNull, [ objNull ] ]
 ];
 
 if (isNull _trigger) then
@@ -11,14 +10,12 @@ if (isNull _trigger) then
 };
 
 private _triggerDatas = (triggerText _trigger) splitString "_";
-private _delete_group_and_its_members = _functions get "delete_group_and_its_members";
 if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "DynamicSpawn" }) then
 {
-	private _handleClearedTrigger = _trigger getVariable "_clearedZoneHandler";
-	terminate _handleClearedTrigger;
+	private _handleClearedTriggerScriptHandler = _trigger getVariable "_handleClearedTriggerScriptHandler";
+	terminate _handleClearedTriggerScriptHandler;
 	
 	private _groupsTypeToDespawn = _trigger getVariable "_groupsToDespawn";
-	//{ _debugGroups pushBack groupId _x; } forEach _spawnedGroups;
 
 	{
 		private _groupsToDespawn = _groupsTypeToDespawn get _x;
@@ -26,7 +23,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		{
 			for "_i" from count _groupsToDespawn - 1 to 0 step -1 do {
 				private _groupToDelete = _groupsToDespawn deleteAt _i;
-				_groupToDelete call _delete_group_and_its_members;
+				_groupToDelete call CID_fnc_deleteGroupAndItsMembers;
 			};
 
 			_groupsTypeToDespawn set [ _x, _groupsToDespawn ];
@@ -42,9 +39,5 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		deleteVehicle _detection_trigger;
 	};
 
-	private _extraScriptDeactivated = _trigger getVariable '_extraScriptDeactivated';
-	private _extraScriptParamsDeactivated = _trigger getVariable '_extraScriptParamsDeactivated';
-	private _customScriptParams = [ _trigger, _functions ];
-	_customScriptParams append _extraScriptParamsDeactivated;
-	_customScriptParams call _extraScriptDeactivated;
+	[ _trigger, "TriggerDeactivated" ] call CID_fnc_customScript;
 };

@@ -1,7 +1,10 @@
+#include "spawn_constants.hpp"
+
 params [ "_group", "_waypointIndex" ];
 
 private _waypoints = _group getVariable "_waypoints";
-private _loop_waypoints_to_a_group_file_path = _group getVariable "_loop_waypoints_to_a_group_file_path";
+
+diag_log _group;
 
 while {(count (waypoints _group)) > 1} do
 {
@@ -17,6 +20,6 @@ for "_i" from 0 to _realAmountOfWaypoints do
 	{
 		_waypoint = _group addWaypoint [ getPosATL (_waypoints select _i), 0 ];
 		_waypoint setWaypointType "SCRIPTED";
-		[ _group, _realAmountOfWaypoints + 2 ] setWaypointScript _loop_waypoints_to_a_group_file_path;
+		[ _group, _realAmountOfWaypoints + 2 ] setWaypointScript LOOP_WAYPOINTS_TO_A_GROUP_FILE_PATH;
 	};
 };

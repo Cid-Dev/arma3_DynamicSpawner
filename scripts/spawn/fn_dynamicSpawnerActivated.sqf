@@ -2,9 +2,7 @@
 
 // DynamicSpawn_WEST_EAST_5_6,8_2_4_1_1_1
 params [
-	[ "_trigger", objNull, [ objNull ] ],
-	"_functions",
-	"_cleanupTrigger"
+	[ "_trigger", objNull, [ objNull ] ]
 ];
 
 if (isNull _trigger) then
@@ -19,13 +17,11 @@ private _triggerDatas = _triggerText splitString "_";
 diag_log format [ "Trigger datas : %1", str _triggerDatas ];
 if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "DynamicSpawn" }) then
 {
-	private _checkSides = _functions get "checkSides";
 	private _activationSide = _triggerDatas select INDEX_OF_ACTIVATION_SIDE;
 	private _spawnSideName = _triggerDatas select INDEX_OF_SPAWN_SIDE;
-	[ _activationSide, _spawnSideName ] call _checkSides;
+	[ _activationSide, _spawnSideName ] call CID_fnc_checkSides;
 
-	private _string_to_side = _functions get "string_to_side";
-	private _spawnSide = _spawnSideName call _string_to_side;
+	private _spawnSide = _spawnSideName call CID_fnc_stringToSide;
 
 	diag_log format [ "Checking activation side %1 and spawn side %2 of trigger.", _activationSide, _spawnSide ];
 
@@ -38,15 +34,11 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		"this",
 		
 		"private _airGroups = thisTrigger getVariable '_airGroups';
-		private _functions = thisTrigger getVariable '_functions';
-		private _contains_alive_units = _functions get 'contains_alive_units';
-		private _extraScriptDetected = thisTrigger getVariable '_extraScriptDetected';
-		private _extraScriptParamsDetected = thisTrigger getVariable '_extraScriptParamsDetected';
 		private _triggerPosition = getPos thisTrigger;
 		
 		for '_i' from 0 to count _airGroups - 1 do {
 			private _group = _airGroups select _i;
-			if (_group call _contains_alive_units) then
+			if (_group call CID_fnc_containsAliveUnits) then
 			{
 				for '_j' from 0 to count thisList - 1 do {
 					private _detectedUnit = thisList select _j;
@@ -76,29 +68,14 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			};
 		};
 
-		private _customScriptParams = [ thisTrigger, _functions ];
-		_customScriptParams append _extraScriptParamsDetected;
-		_customScriptParams call _extraScriptDetected;",
+		[ thisTrigger, 'TriggerDetected' ] call CID_fnc_customScript;",
 		
-		"private _extraScriptUndetected = thisTrigger getVariable '_extraScriptUndetected';
-		private _extraScriptParamsUndetected = thisTrigger getVariable '_extraScriptParamsUndetected';
-		private _customScriptParams = [ thisTrigger, _functions ];
-		_customScriptParams append _extraScriptParamsUndetected;
-		_customScriptParams call _extraScriptUndetected;"
+		"[ thisTrigger, 'TriggerUndetected' ] call CID_fnc_customScript;"
 	];
-	
-	_detection_trigger setVariable [ "_functions", _functions ];
 
-	private _extraScriptDetected = _trigger getVariable "_extraScriptDetected";
-	private _extraScriptParamsDetected = _trigger getVariable "_extraScriptParamsDetected";
-	_detection_trigger setVariable [ "_extraScriptDetected", _extraScriptDetected ];
-	_detection_trigger setVariable [ "_extraScriptParamsDetected", _extraScriptParamsDetected ];
+	private _customScripts = _trigger getVariable '_customScripts';
+	_detection_trigger setVariable [ "_customScripts", _customScripts ];
 
-	private _extraScriptUndetected = _trigger getVariable "_extraScriptUndetected";
-	private _extraScriptParamsUndetected = _trigger getVariable "_extraScriptParamsUndetected";
-	_detection_trigger setVariable [ "_extraScriptUndetected", _extraScriptUndetected ];
-	_detection_trigger setVariable [ "_extraScriptParamsUndetected", _extraScriptParamsUndetected ];
-	
 	_trigger setVariable [ "_detection_trigger", _detection_trigger ];
 
 	diag_log "Getting amount of different squads.";
@@ -108,18 +85,15 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	diag_log format [ "%1 infantry squads, %2 vehicle squads and %3 air squads are going to be spawned.", str _AmountOfInfantrySquads, str _AmountOfVehicleSquads, str _AmountOfAirSquads ];
 	private _triggerId = _triggerDatas select INDEX_OF_TRIGGER_ID;
 
-	
-	private _string_array_to_int_array = _functions get "string_array_to_int_array";
-
 	private _AmountsOfInfantryWaypointsStr = (_triggerDatas select INDEX_OF_AMOUNT_OF_INFANTRY_WAYPOINTS) splitString ",";
-	private _AmountsOfInfantryWaypoints = [ _AmountsOfInfantryWaypointsStr ] call _string_array_to_int_array;
+	private _AmountsOfInfantryWaypoints = [ _AmountsOfInfantryWaypointsStr ] call CID_fnc_stringArrayToIntArray;
 	if (count _AmountsOfInfantryWaypoints == 1) then
 	{
 		_AmountsOfInfantryWaypoints pushBack (_AmountsOfInfantryWaypoints select 0);
 	};
 
 	private _AmountsOfVehicleWaypointsStr = (_triggerDatas select INDEX_OF_AMOUNT_OF_VEHICLE_WAYPOINTS) splitString ",";
-	private _AmountsOfVehicleWaypoints = [ _AmountsOfVehicleWaypointsStr ] call _string_array_to_int_array;
+	private _AmountsOfVehicleWaypoints = [ _AmountsOfVehicleWaypointsStr ] call CID_fnc_stringArrayToIntArray;
 	if (count _AmountsOfVehicleWaypoints == 1) then
 	{
 		_AmountsOfVehicleWaypoints pushBack (_AmountsOfVehicleWaypoints select 0);
@@ -138,18 +112,14 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 	private _allInfantryWaypoints = _waypoints get "infantry";
 	private _allVehicleWaypoints = _waypoints get "vehicle";
 
-	private _get_n_random_elements_from_array = _functions get "get_n_random_elements_from_array";
-
 	diag_log "Getting the desired amount of spawn points for each squads types (caped by the amount of available points).";
-	private _infantrySpawnPoints = [ _allInfantrySpawnPoints, _AmountOfInfantrySquads ] call _get_n_random_elements_from_array;
-	private _vehicleSpawnPoints = [ _allVehicleSpawnPoints, _AmountOfVehicleSquads ] call _get_n_random_elements_from_array;
-	private _airSpawnPoints = [ _allAirSpawnPoints, _AmountOfAirSquads ] call _get_n_random_elements_from_array;
+	private _infantrySpawnPoints = [ _allInfantrySpawnPoints, _AmountOfInfantrySquads ] call CID_fnc_getNRandomElementsFromArray;
+	private _vehicleSpawnPoints = [ _allVehicleSpawnPoints, _AmountOfVehicleSquads ] call CID_fnc_getNRandomElementsFromArray;
+	private _airSpawnPoints = [ _allAirSpawnPoints, _AmountOfAirSquads ] call CID_fnc_getNRandomElementsFromArray;
 	diag_log format [ "Got %1 infantry squads spawn points, %2 vehicle squads spawn points and %3 air squads spawn points.", str count _infantrySpawnPoints, str count _vehicleSpawnPoints, str count _airSpawnPoints ];
 
 	private _groups = _trigger getVariable "_groups";
 	private _spawnedGroupsTypes = _trigger getVariable "_groupsToDespawn";
-	private _loop_waypoints_to_a_group = _functions get "loop_waypoints_to_a_group";
-	private _loop_waypoints_to_a_group_file_path = _functions get "loop_waypoints_to_a_group_file_path";
 
 	private _spawnLandUnits = {
 		params [
@@ -157,41 +127,54 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			"_hashMapKey",
 			"_groups",
 			"_landUnitsSpawnPoints",
-			"_get_n_random_elements_from_array",
 			"_spawnSide",
 			"_minRank",
 			"_maxRank",
 			"_AmountsOfLandUnitsWaypoints",
-			"_allLandUnitsWaypoints",
-			"_loop_waypoints_to_a_group_file_path",
-			"_loop_waypoints_to_a_group"
+			"_allLandUnitsWaypoints"
 		];
 		diag_log format [ "Spawning %1 squads.", _typeOfSquadForLogMessage ];
-		private _landUnitsGroup = [ _groups get _hashMapKey, count _landUnitsSpawnPoints, false ] call _get_n_random_elements_from_array;
+		private _landUnitsGroup = [ _groups get _hashMapKey, count _landUnitsSpawnPoints, false ] call CID_fnc_getNRandomElementsFromArray;
 		private _amountOfLandUnitsToSpawn = count _landUnitsGroup - 1;
 		private _spawnedGroups = [];
 
 		for "_i" from 0 to _amountOfLandUnitsToSpawn do {
 			diag_log format [ "Spawning group %1.", str _i ];
+			private _ranks = [];
+			private _selectedGroup = _landUnitsGroup select _i;
+			if (typeName _selectedGroup != typeName configFile) then
+			{
+				for "_j" from 0 to (count _selectedGroup) - 1 do
+				{
+					_ranks pushBack (floor random (_maxRank - _minRank)) + _minRank;
+				};
+
+				_ranks sort false;
+			};
+
 			private _groupToSpawn = [
 				getPosATL (_landUnitsSpawnPoints select _i),
 				_spawnSide,
-				_landUnitsGroup select _i,
+				_selectedGroup,
+				[],
+				_ranks,
 				[],
 				[],
-				[ _minRank, _maxRank ],
 				[],
-				[],
-				[ -1, 1],
 				floor random 360
 			] call BIS_fnc_spawnGroup;
+
+			diag_log format [ "generated %1", _groupToSpawn];
+
 			_groupToSpawn setBehaviourStrong "SAFE";
 			_groupToSpawn setSpeedMode "LIMITED";
 			_groupToSpawn deleteGroupWhenEmpty true;
 
 			private _units = units _groupToSpawn;
-			for "_i" from 0 to (count _units) - 1 do
+			for "_j" from 0 to (count _units) - 1 do
 			{
+				diag_log format [ "setting up body removal for unit %1", _i];
+
 				(_units select _i) addEventHandler ["Killed", {
 					params ["_unit", "_killer", "_instigator", "_useEffects"];
 					
@@ -213,11 +196,11 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			diag_log "Getting amount of different waypoints.";
 			private _AmountOfLandUnitsWaypoints = _AmountsOfLandUnitsWaypoints call BIS_fnc_randomInt;
 			diag_log format [ "%1 %2 waypoints are going to be used.", str _AmountOfLandUnitsWaypoints, _typeOfSquadForLogMessage ];
-			private _waypoints = [ _allLandUnitsWaypoints, _AmountOfLandUnitsWaypoints ] call _get_n_random_elements_from_array;
+			private _waypoints = [ _allLandUnitsWaypoints, _AmountOfLandUnitsWaypoints ] call CID_fnc_getNRandomElementsFromArray;
+			diag_log format [ "waypoints %1", _waypoints];
 			_groupToSpawn setVariable [ "_waypoints", _waypoints ];
-			_groupToSpawn setVariable [ "_loop_waypoints_to_a_group_file_path", _loop_waypoints_to_a_group_file_path ];
 			diag_log "Setting up waypoints.";
-			[ _groupToSpawn, 0 ] call _loop_waypoints_to_a_group;
+			[ _groupToSpawn, 0 ] call CID_fnc_loopWaypointsToAGroup;
 		};
 		_spawnedGroups;
 	};
@@ -227,14 +210,11 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		"INFANTRY",
 		_groups,
 		_infantrySpawnPoints,
-		_get_n_random_elements_from_array,
 		_spawnSide,
 		RANK_PRIVATE,
 		RANK_CAPTAIN,
 		_AmountsOfInfantryWaypoints,
-		_allInfantryWaypoints,
-		_loop_waypoints_to_a_group_file_path,
-		_loop_waypoints_to_a_group
+		_allInfantryWaypoints
 	] call _spawnLandUnits;
 
 	private _vehicleGroups = [
@@ -242,19 +222,16 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 		"VEHICLE",
 		_groups,
 		_vehicleSpawnPoints,
-		_get_n_random_elements_from_array,
 		_spawnSide,
 		RANK_LIEUTENANT,
 		RANK_MAJOR,
 		_AmountsOfVehicleWaypoints,
-		_allVehicleWaypoints,
-		_loop_waypoints_to_a_group_file_path,
-		_loop_waypoints_to_a_group
+		_allVehicleWaypoints
 	] call _spawnLandUnits;
 
 
 	diag_log "Spawning air vehicles.";
-	private _airUnitsGroup = [ _groups get "AIR", count _airSpawnPoints, false ] call _get_n_random_elements_from_array;
+	private _airUnitsGroup = [ _groups get "AIR", count _airSpawnPoints, false ] call CID_fnc_getNRandomElementsFromArray;
 	private _amountOfAirUnitsToSpawn = count _airUnitsGroup - 1;
 	private _airGroups = [];
 	if (_amountOfAirUnitsToSpawn >= 0) then
@@ -296,17 +273,8 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 
 	_trigger setVariable [ "_groupsToDespawn", _spawnedGroupsTypes ];
 
-	private _handleClearedTrigger = _trigger getVariable "_handleClearedTrigger";
-	private _extraScriptClearedTrigger = _trigger getVariable "_extraScriptClearedTrigger";
-	private _extraScriptClearedTriggerParams = _trigger getVariable "_extraScriptClearedTriggerParams";
-	private _deleteEverythingOnceCleared = _trigger getVariable "_deleteEverythingOnceCleared";
+	[ _trigger, "TriggerActivated" ] call CID_fnc_customScript;
 
-	private _extraScriptActivated = _trigger getVariable '_extraScriptActivated';
-	private _extraScriptParamsActivated = _trigger getVariable '_extraScriptParamsActivated';
-	private _customScriptParams = [ _trigger, _functions ];
-	_customScriptParams append _extraScriptParamsActivated;
-	_customScriptParams call _extraScriptActivated;
-
-	private _clearedZoneHandler = [ _trigger, _functions, _extraScriptClearedTrigger, _extraScriptClearedTriggerParams, _deleteEverythingOnceCleared, _cleanupTrigger ] spawn _handleClearedTrigger;
-	_trigger setVariable [ "_clearedZoneHandler", _clearedZoneHandler ];
+	private _handleClearedTriggerScriptHandler = _trigger spawn CID_fnc_handleClearedTrigger;
+	_trigger setVariable [ "_handleClearedTriggerScriptHandler", _handleClearedTriggerScriptHandler ];
 };

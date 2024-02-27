@@ -14,3 +14,6 @@
 #define RANK_MAJOR 5
 #define RANK_COLONEL 6
 #define TRIGGER_NAME_PATTERN "DynamicSpawn(_(((WE)|(EA))ST)|(GUER)|(CIV)){2}(_\d+(,\d+)?){7}/i"
+#define LOOP_WAYPOINTS_TO_A_GROUP_FILE_PATH "scripts\spawn\fn_loopWaypointsToAGroup.sqf"
+#define DELETE_TRIGGER_ONCE_CLEARED_YES 1
+#define DELETE_TRIGGER_ONCE_CLEARED_NO 0
