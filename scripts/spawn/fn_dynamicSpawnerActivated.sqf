@@ -75,6 +75,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 
 	private _customScripts = _trigger getVariable '_customScripts';
 	_detection_trigger setVariable [ "_customScripts", _customScripts ];
+	_detection_trigger setVariable [ "_trigger", _trigger ];
 
 	_trigger setVariable [ "_detection_trigger", _detection_trigger ];
 
@@ -173,9 +174,9 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			private _units = units _groupToSpawn;
 			for "_j" from 0 to (count _units) - 1 do
 			{
-				diag_log format [ "setting up body removal for unit %1", _i];
+				diag_log format [ "setting up body removal for unit %1", _j];
 
-				(_units select _i) addEventHandler ["Killed", {
+				(_units select _j) addEventHandler ["Killed", {
 					params ["_unit", "_killer", "_instigator", "_useEffects"];
 					
 					// remove body after 10 minutes

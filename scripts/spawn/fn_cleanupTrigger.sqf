@@ -32,6 +32,13 @@ if (!isNull _trigger) then
 			deleteVehicle (_allTriggerLogic select _i);
 		};
 
+		private _detection_trigger = _trigger getVariable "_detection_trigger";
+		if (!isNil '_detection_trigger') then
+		{
+			_trigger setVariable [ "_detection_trigger", nil ];
+			deleteVehicle _detection_trigger;
+		};
+
 		diag_log "Deleting trigger.";
 		deleteVehicle _trigger;
 	};	
