@@ -41,8 +41,4 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			[ "AmountsOfVehicleWaypoints", _AmountsOfVehicleWaypoints ]
 		]
 	];
-}
-else
-{
-	diag_log format [ "Trigger %1 doesn't need to be set up.", triggerText _trigger ];
 };
