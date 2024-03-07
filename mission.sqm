@@ -21,9 +21,9 @@ class EditorData
 	class Camera
 	{
 		pos[]={7707.9819,366.65451,18282.594};
-		dir[]={0.31059289,-0.61570537,0.72418159};
-		up[]={0.24268961,0.78797638,0.56585759};
-		aside[]={0.91903955,0,-0.39416516};
+		dir[]={0.40362838,-0.58239394,0.7056213};
+		up[]={0.28917307,0.81290662,0.50553107};
+		aside[]={0.86802244,0,-0.49652481};
 	};
 };
 binarizationWanted=0;
@@ -86,6 +86,8 @@ randomSeed=608837;
 class ScenarioData
 {
 	author="=SSI= Cid";
+	disabledAI=1;
+	joinUnassigned=0;
 	class Header
 	{
 		gameType="Zeus";

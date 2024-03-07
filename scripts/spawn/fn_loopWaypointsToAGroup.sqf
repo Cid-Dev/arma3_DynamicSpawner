@@ -4,8 +4,6 @@ params [ "_group", "_waypointIndex" ];
 
 private _waypoints = _group getVariable "_waypoints";
 
-diag_log _group;
-
 while {(count (waypoints _group)) > 1} do
 {
 	deleteWaypoint ((waypoints _group) select 0);

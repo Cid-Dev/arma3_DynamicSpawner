@@ -92,16 +92,13 @@ params [
 ];
 
 private _all_spawn_triggers = (allMissionObjects "EmptyDetector") select { triggerText _x regexMatch TRIGGER_NAME_PATTERN };
-private _length = count _all_spawn_triggers;
 
-for "_i" from 0 to _length - 1 do
 {
-	private _trigger = _all_spawn_triggers select _i;
-	diag_log format [ "Setting up trigger %1 if needed.", triggerText _trigger ];
-
+	private _trigger = _x;
+	
 	[
 		_trigger,
 		_groups,
 		_customScripts
 	] call CID_fnc_configureTrigger;
-};
+} forEach _all_spawn_triggers;

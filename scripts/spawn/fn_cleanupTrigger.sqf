@@ -4,42 +4,27 @@ params [
 	[ "_trigger", objNull, [ objNull ] ]
 ];
 
-if (!isNull _trigger) then 
+private _points = _trigger getVariable "_trigger_points";
+
+private _spawnpoints = _points get "spawnpoints";
+private _waypoints = _points get "waypoints";
+
+private _pointsToDelete = _spawnpoints get "infantry";
+_pointsToDelete append (_spawnpoints get "vehicle");
+_pointsToDelete append (_spawnpoints get "air");
+_pointsToDelete append (_waypoints get "infantry");
+_pointsToDelete append (_waypoints get "vehicle");
+_pointsToDelete append (_waypoints get "air");
+
 {
-	private _triggerText = triggerText _trigger;
-	diag_log format [ "Trigger %1 being cleaned up.", _triggerText ];
+	deleteVehicle _x;
+} forEach _pointsToDelete;
 
-	private _triggerDatas = _triggerText splitString "_";
-	diag_log format [ "Trigger datas : %1", str _triggerDatas ];
-	if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "DynamicSpawn" }) then
-	{
-		private _triggerId = _triggerDatas select INDEX_OF_TRIGGER_ID;
-
-		diag_log "Getting all spawn points related to the trigger.";
-		private _allTriggerLogic = allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "INFANTRY_SPAWN_POINT_%1", _triggerId ] >= 0};
-		_allTriggerLogic append (allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "VEHICLE_SPAWN_POINT_%1", _triggerId ] >= 0});
-		_allTriggerLogic append (allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "AIR_SPAWN_POINT_%1", _triggerId ] >= 0});
-
-		diag_log "Getting all waypoints related to the trigger.";
-		_allTriggerLogic append (allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "INFANTRY_WAYPOINT_%1", _triggerId ] >= 0});
-		_allTriggerLogic append (allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "VEHICLE_WAYPOINT_%1", _triggerId ] >= 0});
-		_allTriggerLogic append (allMissionObjects "Logic" select {toUpper vehicleVarName _x find format [ "AIR_WAYPOINT_%1", _triggerId ] >= 0});
-
-		diag_log "Deleting all found game logic items.";
-		private _length = count _allTriggerLogic - 1;
-		for "_i" from 0 to _length do 
-		{
-			deleteVehicle (_allTriggerLogic select _i);
-		};
-
-		private _detection_trigger = _trigger getVariable "_detection_trigger";
-		if (!isNil '_detection_trigger') then
-		{
-			_trigger setVariable [ "_detection_trigger", nil ];
-			deleteVehicle _detection_trigger;
-		};
-
-		diag_log "Deleting trigger.";
-		deleteVehicle _trigger;
-	};	
+private _detection_trigger = _trigger getVariable "_detection_trigger";
+if (!isNil '_detection_trigger') then
+{
+	_trigger setVariable [ "_detection_trigger", nil ];
+	deleteVehicle _detection_trigger;
 };
+
+deleteVehicle _trigger;

@@ -139,7 +139,7 @@ private _customScripts = createHashMapFromArray
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
-private _configure_all_triggers_script_handler = [ _groups, _customScripts ] execVM "scripts\spawn\configure_all_triggers.sqf";
+private _configure_all_triggers_script_handler = [ _groups, _customScripts ] spawn CID_fnc_configureAllTriggers;
 waitUntil
 {
 	scriptDone _configure_all_triggers_script_handler;
