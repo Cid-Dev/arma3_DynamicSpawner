@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project name="DynamicSpawner">
+  <Package name="Params">
+    <Container name="Messages">
+      <Key ID="STR_CID_DELETE_TRIGGER_ONCE_CLEARED">
+        <Original>Zone deletion when it's clear of ennemies</Original>
+        <English>Zone deletion when it's clear of ennemies</English>
+        <Czech>Zone deletion when it's clear of ennemies</Czech>
+        <French>Suppression d'une zone quand les ennemies ont été éliminés</French>
+        <Spanish>Zone deletion when it's clear of ennemies</Spanish>
+        <Italian>Zone deletion when it's clear of ennemies</Italian>
+        <Polish>Zone deletion when it's clear of ennemies</Polish>
+        <Portuguese>Zone deletion when it's clear of ennemies</Portuguese>
+        <Russian>Zone deletion when it's clear of ennemies</Russian>
+        <German>Zone deletion when it's clear of ennemies</German>
+      </Key>
+      <Key ID="STR_CID_YES">
+        <Original>Yes</Original>
+        <English>Yes</English>
+        <Czech>Yes</Czech>
+        <French>Oui</French>
+        <Spanish>Yes</Spanish>
+        <Italian>Yes</Italian>
+        <Polish>Yes</Polish>
+        <Portuguese>Yes</Portuguese>
+        <Russian>Yes</Russian>
+        <German>Yes</German>
+      </Key>
+      <Key ID="STR_CID_NO">
+        <Original>No</Original>
+        <English>No</English>
+        <Czech>No</Czech>
+        <French>Non</French>
+        <Spanish>No</Spanish>
+        <Italian>No</Italian>
+        <Polish>No</Polish>
+        <Portuguese>No</Portuguese>
+        <Russian>No</Russian>
+        <German>No</German>
+      </Key>
+    </Container>
+  </Package>
+</Project>

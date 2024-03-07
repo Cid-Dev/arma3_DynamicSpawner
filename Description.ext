@@ -1,0 +1,10 @@
+class Params
+{
+	#include "scripts\spawn\params.hpp"
+};
+
+class CfgFunctions
+{
+	#include "scripts\spawn\CfgFunctions.hpp"
+	#include "scripts\utils\CfgFunctions.hpp"
+};

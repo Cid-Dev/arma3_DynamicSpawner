@@ -1,6 +1,5 @@
 params [
 	[ "_trigger", objNull, [ objNull ] ],
-	"_functions",
 	"_createNatoFlag",
 	"_createMarkerFlag"
 ];

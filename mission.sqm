@@ -20,10 +20,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={7759.6074,145.98395,18368.527};
-		dir[]={0.48775733,-0.40963346,0.7709043};
-		up[]={0.21902072,0.91225016,0.34616402};
-		aside[]={0.8450579,1.4901161e-008,-0.53467488};
+		pos[]={7707.9819,366.65451,18282.594};
+		dir[]={0.40362838,-0.58239394,0.7056213};
+		up[]={0.28917307,0.81290662,0.50553107};
+		aside[]={0.86802244,0,-0.49652481};
 	};
 };
 binarizationWanted=0;
@@ -86,6 +86,8 @@ randomSeed=608837;
 class ScenarioData
 {
 	author="=SSI= Cid";
+	disabledAI=1;
+	joinUnassigned=0;
 	class Header
 	{
 		gameType="Zeus";
@@ -170,7 +172,7 @@ class Mission
 			position[]={8363.3262,144.2034,18918.896};
 			class Attributes
 			{
-				text="DynamicSpawn_WEST_EAST_1_2_2_4_1_1_1";
+				text="DynamicSpawn_WEST_EAST_2_2_2_4_1_1_1";
 				sizeA=912.29102;
 				sizeB=660.94501;
 			};

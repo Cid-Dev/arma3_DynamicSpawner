@@ -5,13 +5,8 @@ params [
 	"_createMarkerFlag"
 ];
 
-private _triggerText = triggerText _trigger;
-private _triggerDatas = _triggerText splitString "_";
-if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "DynamicSpawn" }) then
-{
-	private _triggerId = _triggerDatas select INDEX_OF_TRIGGER_ID;
+private _triggerId = (_trigger getVariable "CID_triggerDatas") get "TriggerId";
 
-	private _flagPosition = getPos _trigger;
+private _flagPosition = getPos _trigger;
 
-	_trigger setVariable [ "_flag", [ _triggerId, _flagPosition, "flag_CSAT" ] call _createMarkerFlag ];
-}
+_trigger setVariable [ "_flag", [ _triggerId, _flagPosition, "flag_CSAT" ] call _createMarkerFlag ];

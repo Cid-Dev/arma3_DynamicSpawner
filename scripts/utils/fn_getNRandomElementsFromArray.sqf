@@ -12,7 +12,7 @@ while {count _result < _amountOfElements && { count _inputArrayCopy > 0 }} do {
 	}
 	else
 	{
-		_result pushBack (_inputArrayCopy select floor random count _inputArrayCopy);
+		_result pushBack (selectRandom _inputArrayCopy);
 	};
 };
 _result;
