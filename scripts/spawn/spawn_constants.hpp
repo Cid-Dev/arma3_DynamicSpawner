@@ -17,3 +17,4 @@
 #define LOOP_WAYPOINTS_TO_A_GROUP_FILE_PATH "scripts\spawn\fn_loopWaypointsToAGroup.sqf"
 #define DELETE_TRIGGER_ONCE_CLEARED_YES 1
 #define DELETE_TRIGGER_ONCE_CLEARED_NO 0
+#define DEFAULT_SKILL 0.5

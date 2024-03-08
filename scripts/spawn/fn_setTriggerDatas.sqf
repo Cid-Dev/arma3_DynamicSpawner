@@ -25,7 +25,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 
 	private _AmountsOfInfantryWaypoints = (_triggerDatas select INDEX_OF_AMOUNT_OF_INFANTRY_WAYPOINTS) call CID_fnc_extractValueOfPoint;
 	private _AmountsOfVehicleWaypoints = (_triggerDatas select INDEX_OF_AMOUNT_OF_VEHICLE_WAYPOINTS) call CID_fnc_extractValueOfPoint;
-	private _AmountsOfVehicleWaypoints = (_triggerDatas select INDEX_OF_AMOUNT_OF_AIR_WAYPOINTS) call CID_fnc_extractValueOfPoint;
+	private _AmountsOfAirWaypoints = (_triggerDatas select INDEX_OF_AMOUNT_OF_AIR_WAYPOINTS) call CID_fnc_extractValueOfPoint;
 
 	_trigger setVariable [
 		"CID_triggerDatas",
@@ -38,7 +38,7 @@ if (count _triggerDatas == NUMBER_OF_PARTS && { _triggerDatas select 0 == "Dynam
 			[ "AmountsOfAirSquads", _AmountsOfAirSquads ],
 			[ "AmountsOfInfantryWaypoints", _AmountsOfInfantryWaypoints ],
 			[ "AmountsOfVehicleWaypoints", _AmountsOfVehicleWaypoints ],
-			[ "AmountsOfVehicleWaypoints", _AmountsOfVehicleWaypoints ]
+			[ "AmountsOfAirWaypoints", _AmountsOfAirWaypoints ]
 		]
 	];
 };

@@ -29,6 +29,11 @@ if (!isNil "_triggerCustomizations") then
 			_triggerCustomFinalParams append _triggerCustomizationsParams;
 		};
 
+		if (count _triggerCustomFinalParams == 1) then
+		{
+			_triggerCustomFinalParams = _triggerCustomFinalParams select 0;
+		};
+
 		_triggerCustomFinalParams call _triggerCustomizationsScript;
 	};
 };

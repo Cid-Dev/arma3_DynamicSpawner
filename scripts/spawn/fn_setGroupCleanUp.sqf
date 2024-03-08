@@ -14,7 +14,7 @@ private _units = units _group;
 			sleep 600;
 			if (!isNil "_unitToRemove" && { !isNull _unitToRemove && { !alive _unitToRemove } }) then
 			{
-				private _vehicle = objectParent _unit;
+				private _vehicle = objectParent _unitToRemove;
 				if (isNull _vehicle) then
 				{
 					deleteVehicle _unitToRemove;

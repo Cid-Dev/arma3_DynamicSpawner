@@ -1,5 +1,3 @@
-#include "spawn_constants.hpp"
-
 params [
 	[ "_trigger", objNull, [ objNull ] ],
 	[
