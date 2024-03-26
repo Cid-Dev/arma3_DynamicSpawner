@@ -37,10 +37,43 @@ if (_amountOfAirUnitsToSpawn >= 0) then
 
 		private _triggerPosition = getPos _trigger;
 
-		private _waypoint = _groupToSpawn addWaypoint [ [ _triggerPosition select 0, _triggerPosition select 1, 250 ], 0 ];
+		private _loiterAltitude = [ 75, 200] select ((_airUnitsGroups select _i) isKindOf "PLANE");
+		private _waypoint = _groupToSpawn addWaypoint [ _triggerPosition, 0 ];
 		_waypoint setWaypointType "LOITER";
 		_waypoint setWaypointLoiterType "CIRCLE_L";
 		_waypoint setWaypointLoiterRadius 500;
+		_waypoint setWaypointLoiterAltitude _loiterAltitude;
+
+		_groupToSpawn setVariable [ "CID_LoiterPosition", _triggerPosition ];
+		_groupToSpawn setVariable [ "CID_LoiterAltitude", _loiterAltitude ];
+
+		_groupToSpawn addEventHandler ["EnemyDetected", {
+			params ["_group", "_newTarget"];
+
+			private _currentWaypoints = waypoints _group;
+
+			{
+				private _waypoint = _x;
+				private _type = waypointType _waypoint;
+				if (_type in [ '', 'LOITER', 'MOVE' ]) then
+				{
+					deleteWaypoint _waypoint;
+				};
+			} forEachReversed _currentWaypoints;
+
+			private _detectedUnitPosition = getPosASL _newTarget;
+
+			private _waypoint = _group addWaypoint [ _detectedUnitPosition, 0 ];
+			_waypoint setWaypointType 'SAD';
+
+			private _loiterPosition = _group getVariable "CID_LoiterPosition";
+			private _loiterAltitude = _group getVariable "CID_LoiterAltitude";
+			private _loiterWaypoint = _group addWaypoint [ _loiterPosition, 0 ];
+			_loiterWaypoint setWaypointType "LOITER";
+			_loiterWaypoint setWaypointLoiterType "CIRCLE_L";
+			_loiterWaypoint setWaypointLoiterRadius 500;
+			_loiterWaypoint setWaypointLoiterAltitude _loiterAltitude;
+		}];
 
 		_groupToSpawn call CID_fnc_setGroupCleanUp;
 	};
